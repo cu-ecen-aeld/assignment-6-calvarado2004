@@ -46,7 +46,6 @@ do_install () {
     install -d ${D}/etc/finder-app/conf/
     install -m 0755 ${S}/conf/* ${D}/etc/finder-app/conf/
     install -d ${D}${bindir}
-    install -m 0755 ${S}/assignment-autotest/test/assignment4/* ${D}${bindir}/
     install -D -m 755 ${S}/finder-app/finder.sh ${D}${bindir}/finder.sh
     install -D -m 755 ${S}/finder-app/finder-test.sh ${D}${bindir}/tester.sh
     install -D -m 755 ${S}/finder-app/finder-test.sh ${D}${bindir}/finder-test.sh
