@@ -34,8 +34,11 @@ do_configure () {
 }
 
 do_compile() {
-    oe_runmake CC="${CC}" LDFLAGS="${TARGET_LDFLAGS}" -C ${S}/finder-app all
-    oe_runmake CC="${CC}" LDFLAGS="${TARGET_LDFLAGS}" -C ${S}/server all
+    # Compile the object files
+    oe_runmake CC="${CC}" -C ${S}/server all
+    
+    # Manually link the binaries with the appropriate LDFLAGS
+    ${CC} ${TARGET_LDFLAGS} -o ${S}/server/aesdsocket ${S}/server/aesdsocket.o -pthread -lrt
 }
 
 do_install () {
@@ -46,13 +49,7 @@ do_install () {
 	# and
 	# https://docs.yoctoproject.org/ref-manual/variables.html?highlight=workdir#term-S
 	# See example at https://github.com/cu-ecen-aeld/ecen5013-yocto/blob/ecen5013-hello-world/meta-ecen5013/recipes-ecen5013/ecen5013-hello-world/ecen5013-hello-world_git.bb
-    install -d ${D}/etc/finder-app/conf/
-    install -m 0755 ${S}/conf/* ${D}/etc/finder-app/conf/
     install -d ${D}${bindir}
-    install -D -m 755 ${S}/finder-app/finder.sh ${D}${bindir}/finder.sh
-    install -D -m 755 ${S}/finder-app/finder-test.sh ${D}${bindir}/tester.sh
-    install -D -m 755 ${S}/finder-app/finder-test.sh ${D}${bindir}/finder-test.sh
-    install -D -m 755 ${S}/finder-app/writer ${D}${bindir}/writer
     install -D -m 755 ${S}/server/aesdsocket ${D}${bindir}/aesdsocket
     install -D -m 755 ${S}/server/aesdsocket-start-stop ${D}${sysconfdir}/init.d/S99aesdsocket
 }
