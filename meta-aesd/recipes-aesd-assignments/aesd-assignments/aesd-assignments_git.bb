@@ -24,15 +24,18 @@ S = "${WORKDIR}/git"
 #FILES:${PN} += "${bindir}/aesdsocket"
 # TODO: customize these as necessary for any libraries you need for your application
 # (and remove comment)
-#TARGET_LDFLAGS += "-pthread -lrt"
+
+LDFLAGS = "-Wl,-O1 -Wl,--as-needed -Wl,--hash-style=gnu -Wl,-z,relro,-z,now"
+
+TARGET_LDFLAGS += "${LDFLAGS} -pthread -lrt"
 
 do_configure () {
 	:
 }
 
 do_compile() {
-    oe_runmake CC="${CC}" LDFLAGS="${LDFLAGS}" -C ${S}/finder-app all
-    oe_runmake CC="${CC}" LDFLAGS="${LDFLAGS}" -C ${S}/server all
+    oe_runmake CC="${CC}" LDFLAGS="${TARGET_LDFLAGS}" -C ${S}/finder-app all
+    oe_runmake CC="${CC}" LDFLAGS="${TARGET_LDFLAGS}" -C ${S}/server all
 }
 
 do_install () {
