@@ -31,8 +31,8 @@ do_configure () {
 }
 
 do_compile() {
-    oe_runmake CC="${CC}" -C ${S}/finder-app all
-    oe_runmake CC="${CC}" -C ${S}/server all
+    oe_runmake CC="${CC}" LDFLAGS="${LDFLAGS}" -C ${S}/finder-app all
+    oe_runmake CC="${CC}" LDFLAGS="${LDFLAGS}" -C ${S}/server all
 }
 
 do_install () {
