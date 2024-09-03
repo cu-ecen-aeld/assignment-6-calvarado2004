@@ -19,6 +19,9 @@ SRCREV = "fac3fb09c7e549db30cd0e017f024ead78533293"
 # in your assignments repo
 S = "${WORKDIR}/git"
 
+git submodule update --init --recursive
+
+
 # TODO: Add the aesdsocket application and any other files you need to install
 # See https://git.yoctoproject.org/poky/plain/meta/conf/bitbake.conf?h=kirkstone
 #FILES:${PN} += "${bindir}/aesdsocket"
