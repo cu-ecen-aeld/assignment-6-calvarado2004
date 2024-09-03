@@ -52,6 +52,8 @@ do_install () {
     install -d ${D}${bindir}
     install -D -m 755 ${S}/server/aesdsocket ${D}${bindir}/aesdsocket
     install -D -m 755 ${S}/server/aesdsocket-start-stop ${D}${sysconfdir}/init.d/S99aesdsocket
+    install -m 0755 ${S}/assignment-autotest/test/assignment6-yocto/assignment-test.sh ${D}${bindir}/assignment-test.sh
+
 }
 
 FILES:${PN} += "${bindir}/*"
