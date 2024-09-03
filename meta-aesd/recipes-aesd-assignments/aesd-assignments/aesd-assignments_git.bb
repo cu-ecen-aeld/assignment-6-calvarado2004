@@ -38,7 +38,11 @@ do_configure () {
 }
 
 do_compile () {
-	oe_runmake
+    # Compile the object files
+    oe_runmake CC="${CC}" -C ${S}/server all
+    
+    # Manually link the binaries with the appropriate LDFLAGS
+    ${CC} ${TARGET_LDFLAGS} -o ${S}/server/aesdsocket ${S}/server/aesdsocket.o -pthread -lrt
 }
 
 do_install () {
