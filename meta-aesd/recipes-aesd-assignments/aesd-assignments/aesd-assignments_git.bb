@@ -24,7 +24,9 @@ S = "${WORKDIR}/git/server"
 FILES:${PN} += "${bindir}/aesdsocket"
 # TODO: customize these as necessary for any libraries you need for your application
 # (and remove comment)
-TARGET_LDFLAGS += "-pthread -lrt"
+LDFLAGS = "-Wl,-O1 -Wl,--as-needed -Wl,--hash-style=gnu -Wl,-z,relro,-z,now"
+
+TARGET_LDFLAGS += "${LDFLAGS} -pthread -lrt"
 
 inherit update-rc.d
 FILES:${PN} += "${bindir}/aesdsocket"
