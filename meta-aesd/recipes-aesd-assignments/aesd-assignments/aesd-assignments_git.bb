@@ -17,31 +17,26 @@ SRCREV = "fac3fb09c7e549db30cd0e017f024ead78533293"
 # https://docs.yoctoproject.org/ref-manual/variables.html?highlight=workdir#term-WORKDIR
 # We reference the "server" directory here to build from the "server" directory
 # in your assignments repo
-S = "${WORKDIR}/git"
-
-git submodule update --init --recursive
-
+S = "${WORKDIR}/git/server"
 
 # TODO: Add the aesdsocket application and any other files you need to install
 # See https://git.yoctoproject.org/poky/plain/meta/conf/bitbake.conf?h=kirkstone
-#FILES:${PN} += "${bindir}/aesdsocket"
+FILES:${PN} += "${bindir}/aesdsocket"
 # TODO: customize these as necessary for any libraries you need for your application
 # (and remove comment)
+TARGET_LDFLAGS += "-pthread -lrt"
 
-LDFLAGS = "-Wl,-O1 -Wl,--as-needed -Wl,--hash-style=gnu -Wl,-z,relro,-z,now"
-
-TARGET_LDFLAGS += "${LDFLAGS} -pthread -lrt"
+inherit update-rc.d
+FILES:${PN} += "${bindir}/aesdsocket"
+INITSCRIPT_PACKAGES = "${PN}"
+INITSCRIPT_NAME:${PN} = "aesdsocket-start-stop"
 
 do_configure () {
 	:
 }
 
-do_compile() {
-    # Compile the object files
-    oe_runmake CC="${CC}" -C ${S}/server all
-    
-    # Manually link the binaries with the appropriate LDFLAGS
-    ${CC} ${TARGET_LDFLAGS} -o ${S}/server/aesdsocket ${S}/server/aesdsocket.o -pthread -lrt
+do_compile () {
+	oe_runmake
 }
 
 do_install () {
@@ -52,11 +47,10 @@ do_install () {
 	# and
 	# https://docs.yoctoproject.org/ref-manual/variables.html?highlight=workdir#term-S
 	# See example at https://github.com/cu-ecen-aeld/ecen5013-yocto/blob/ecen5013-hello-world/meta-ecen5013/recipes-ecen5013/ecen5013-hello-world/ecen5013-hello-world_git.bb
+
     install -d ${D}${bindir}
-    install -D -m 755 ${S}/server/aesdsocket ${D}${bindir}/aesdsocket
-    install -D -m 755 ${S}/server/aesdsocket-start-stop ${D}${sysconfdir}/init.d/S99aesdsocket
-    install -m 0755 ${S}/assignment-autotest/test/assignment6-yocto/assignment-test.sh ${D}${bindir}/assignment-test.sh
+    install -m 0775 ${S}/aesdsocket ${D}${bindir}/
 
+    install -d ${D}${sysconfdir}/init.d
+    install -m 0775 ${S}/aesdsocket-start-stop ${D}${sysconfdir}/init.d
 }
-
-FILES:${PN} += "${bindir}/*"
